@@ -3,6 +3,7 @@ package advent.code;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,9 @@ public class Day1 {
         List<String> measurements = null;
         ArrayList<Integer> mInt = new ArrayList<>();
         try {
-            measurements = Files.readAllLines(Paths.get(System.getProperty("user.home"),"OneDrive","Documentos","NetBeansProjects","DAY1","src","advent","code","input.txt"),StandardCharsets.UTF_8);
+            Path inputPath = Paths.get("");
+            Path absPath = Paths.get(inputPath.toAbsolutePath().toString(),"src","advent","code","input.txt");
+            measurements = Files.readAllLines(absPath,StandardCharsets.UTF_8);
         } catch (IOException ex) {
             System.out.println("Existe una excepcion de IO");
         }
