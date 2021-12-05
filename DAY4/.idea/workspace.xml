@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cd158873-196a-4e50-bab8-59feee7cb58e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ec/epn/edu/FirstLine.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/DAY4/ec/epn/edu/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DAY4/ec/epn/edu/input.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ec/epn/edu/InputToArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ec/epn/edu/InputToArray.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ec/epn/edu/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ec/epn/edu/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ec/epn/edu/Part1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ec/epn/edu/Part1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ec/epn/edu/Part2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ec/epn/edu/Part2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ec/epn/edu/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/ec/epn/edu/input.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +36,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../DAY5" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -76,6 +69,8 @@
       <workItem from="1638539442332" duration="179000" />
       <workItem from="1638593689233" duration="3651000" />
       <workItem from="1638713252436" duration="14296000" />
+      <workItem from="1638729275290" duration="40000" />
+      <workItem from="1638729337400" duration="38000" />
     </task>
     <servers />
   </component>
