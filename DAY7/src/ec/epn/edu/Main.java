@@ -12,7 +12,7 @@ public class Main {
         ArrayList<Integer> mInt = inputToArray.getTheArray();
         //System.out.println(firstLine);
         //System.out.println(mInt);
-        //part1.runPart1(mInt);
+        part1.runPart1(mInt);
         part2.runPart2(mInt);
     }
 }
