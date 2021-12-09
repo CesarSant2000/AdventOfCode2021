@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TopDownBSPTreeConstruction xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/org/apache/commons/geometry/examples/tutorials/bsp/TopDownBSPTreeConstruction.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Licensed to the Apache Software Foundation (ASF) under one or more</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * contributor license agreements.  See the NOTICE file distributed with</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * this work for additional information regarding copyright ownership.</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * The ASF licenses this file to You under the Apache License, Version 2.0</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * (the "License"); you may not use this file except in compliance with</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * the License.  You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">package</strong> org.apache.commons.geometry.examples.tutorials.bsp;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.Bounds2D;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.Lines;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.RegionBSPTree2D;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.RegionBSPTree2D.RegionNode2D;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.Segment;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.Vector2D;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.geometry.euclidean.twod.path.LinePath;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.numbers.core.Precision;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">/** Class containing tutorial code for constructing a 2D BSP tree using</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * a top-down approach.</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../org/apache/commons/geometry/examples/tutorials/bsp/TopDownBSPTreeConstruction.html">TopDownBSPTreeConstruction</a> {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <em class="jxr_javadoccomment">/** String defining the name format of output svg files. */</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String OUTPUT_FILE_FORMAT = <span class="jxr_string">"td-cut-%d.svg"</span>;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <em class="jxr_javadoccomment">/** No instantiation. */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../../../../org/apache/commons/geometry/examples/tutorials/bsp/TopDownBSPTreeConstruction.html">TopDownBSPTreeConstruction</a>() {}
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <em class="jxr_javadoccomment">/** Tutorial code entry point.</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">     * @param args command arguments; if given, the first argument is used as the location of</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">     *      output folder</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(<strong class="jxr_keyword">final</strong> String[] args) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          <strong class="jxr_keyword">final</strong> File outputFolder = <strong class="jxr_keyword">new</strong> File(args.length &gt; 0 ? args[0] : <span class="jxr_string">"."</span>);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/examples/tutorials/bsp/BSPTreeSVGWriter.html">BSPTreeSVGWriter</a> svgWriter = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../org/apache/commons/geometry/examples/tutorials/bsp/BSPTreeSVGWriter.html">BSPTreeSVGWriter</a>(Bounds2D.from(Vector2D.of(-8, -8), Vector2D.of(8, 8)));
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>          <strong class="jxr_keyword">final</strong> Map&lt;RegionNode2D, String&gt; nodeNames = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          <strong class="jxr_keyword">int</strong> cutCount = 0;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <em class="jxr_comment">// create a precision context for floating point comparisons</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          <strong class="jxr_keyword">final</strong> Precision.DoubleEquivalence precision = Precision.doubleEquivalenceOfEpsilon(1e-6);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <em class="jxr_comment">// construct an empty tree</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionBSPTree2D</a> tree = RegionBSPTree2D.empty();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/Segment.html">Segment</a> firstBoundary = Lines.segmentFromPoints(Vector2D.of(-5, 0), Vector2D.of(-1, 0), precision);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          tree.insert(firstBoundary);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> a = tree.getRoot();
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> b = a.getMinus();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> c = a.getPlus();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          nodeNames.put(a, <span class="jxr_string">"a"</span>);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          nodeNames.put(b, <span class="jxr_string">"b"</span>);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          nodeNames.put(c, <span class="jxr_string">"c"</span>);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          svgWriter.write(tree, nodeNames, <strong class="jxr_keyword">new</strong> File(outputFolder, String.format(OUTPUT_FILE_FORMAT, ++cutCount)));
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          tree.insert(Lines.segmentFromPoints(Vector2D.of(1, 0), Vector2D.of(-5, 3), precision));
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          tree.insert(Lines.segmentFromPoints(Vector2D.of(-5, 3), Vector2D.of(-5, 0), precision));
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> d = b.getMinus();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> e = b.getPlus();
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> f = d.getMinus();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> g = d.getPlus();
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          nodeNames.put(d, <span class="jxr_string">"d"</span>);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          nodeNames.put(e, <span class="jxr_string">"e"</span>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          nodeNames.put(f, <span class="jxr_string">"f"</span>);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          nodeNames.put(g, <span class="jxr_string">"g"</span>);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          svgWriter.write(tree, nodeNames, <strong class="jxr_keyword">new</strong> File(outputFolder, String.format(OUTPUT_FILE_FORMAT, ++cutCount)));
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/path/LinePath.html">LinePath</a> path = LinePath.fromVertices(Arrays.asList(
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  Vector2D.of(-1, 0),
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  Vector2D.of(5, -3),
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  Vector2D.of(5, 0),
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  Vector2D.of(1, 0)), precision);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          tree.insert(path);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> h = c.getMinus();
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> i = c.getPlus();
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> j = h.getMinus();
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../../../org/apache/commons/geometry/euclidean/twod/RegionBSPTree2D.html">RegionNode2D</a> k = h.getPlus();
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          nodeNames.put(h, <span class="jxr_string">"h"</span>);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         nodeNames.put(i, <span class="jxr_string">"i"</span>);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         nodeNames.put(j, <span class="jxr_string">"j"</span>);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         nodeNames.put(k, <span class="jxr_string">"k"</span>);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         svgWriter.write(tree, nodeNames, <strong class="jxr_keyword">new</strong> File(outputFolder, String.format(OUTPUT_FILE_FORMAT, ++cutCount)));
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     }
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2016&#x2013;2021 <a href="https://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.</div>
+</body>
+</html>
