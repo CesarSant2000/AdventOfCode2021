@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d752731-35b8-4cb5-9d2e-9ef2a3b7b2dd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_lang3_3_12_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DAY13.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ec/epn/edu/InputToArray2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ec/epn/edu/input.txt" afterDir="false" />
-    </list>
+    <list default="true" id="9d752731-35b8-4cb5-9d2e-9ef2a3b7b2dd" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,6 +63,7 @@
       <option name="presentableId" value="Default" />
       <updated>1639398832316</updated>
       <workItem from="1639398833533" duration="7187000" />
+      <workItem from="1639407604373" duration="66000" />
     </task>
     <servers />
   </component>
